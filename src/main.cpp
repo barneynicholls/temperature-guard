@@ -14,7 +14,7 @@
 #include "web.h"
 #include "led.h"
 
-const char* FW_VERSION = "2.3.1";
+const char* FW_VERSION = "2.4.0";
 
 // Pin assignments for the board as wired; change these to match yours
 #define DHT_PIN      7
