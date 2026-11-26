@@ -409,7 +409,7 @@ async function openDay(n){sel=n;daysList();const f=files.find(x=>x.name==n);$('#
  $('#dstats').innerHTML=s.n?tile('Low',f1(s.lo),clk(new Date(s.loT)),'var(--cool)')+tile('High',f1(s.hi),clk(new Date(s.hiT)),'var(--heat)')+tile('Heater ran',s.run?dur(s.run).replace(' min',' m'):'0 m',s.cyc+(s.cyc==1?' cycle':' cycles'))+tile('Humidity',Math.round(s.hl)+'–'+Math.round(s.hh)+'%','range'):'<div class="sub">No readings this day</div>';
  const d0=new Date(n.slice(0,10)+'T00:00:00').getTime(),d1=new Date(d0);d1.setDate(d1.getDate()+1);
  chart($('#dchart'),pts,d0,+d1,{labelH:6,on:S&&S.onTemp,off:S&&S.offTemp,readout:$('#drd'),hint:'',label:'Temperature on '+dayLabel(n,1)});$('#drd').textContent='';
- $('#devents').innerHTML=ev.map(e=>'<li style="grid-template-columns:64px 0 minmax(0,1fr)"><span class="t">'+esc(e.t)+'</span><span></span><span>'+esc(e.x)+'</span></li>').join('')||'<li><span></span><span></span><span class="sub">No events</span></li>'}
+ $('#devents').innerHTML=ev.slice().reverse().map(e=>'<li style="grid-template-columns:64px 0 minmax(0,1fr)"><span class="t">'+esc(e.t)+'</span><span></span><span>'+esc(e.x)+'</span></li>').join('')||'<li><span></span><span></span><span class="sub">No events</span></li>'}
 async function del(n){if(!confirm('Delete the log for '+dayLabel(n,1)+'? This cannot be undone.'))return;try{await j('/api/log?f='+encodeURIComponent(n),{method:'DELETE'});toast('Deleted '+n);sel=null;loadLogs()}catch(e){toast(e.message)}}
 
 // ---------- settings ----------
