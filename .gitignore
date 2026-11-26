@@ -1,0 +1,12 @@
+# Build output
+.pio/
+.vscode/
+
+# Local / private files: never publish these
+plan.txt
+tinytuya.json
+devices.json
+snapshot.json
+tuya-raw.json
+*.bin
+secrets.ini
