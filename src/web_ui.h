@@ -7,9 +7,12 @@ static const char WEB_UI[] PROGMEM = R"HTML(<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Temperature Guard</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C2410C' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z'/%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem('st-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <style>
-:root{--bg:#F5F4F0;--card:#FFFFFF;--ink:#16181B;--mute:#5B6068;--line:#E4E1DA;--soft:#F0EEE9;--field:#D5D1C8;--heat:#C2410C;--cool:#1E5AA8;--heatT:#FDEBDD;--coolT:#E6EEF8;--coolM:#A9C3E6;--band:#F7C9A8;--ok:#2F7D4A;--bad:#A61B1B;--warnB:#E8A33D;--warnT:#FFF8EC;--bar:#16181B;--barInk:#FFFFFF;--shadow:0 1px 2px rgba(0,0,0,.08)}
-@media (prefers-color-scheme:dark){:root{--bg:#121315;--card:#1B1D20;--ink:#ECEDEE;--mute:#9DA3AA;--line:#2C2F34;--soft:#24272B;--field:#3A3E44;--heat:#F0874A;--cool:#7DAEF0;--heatT:#3A2318;--coolT:#18263A;--coolM:#34557F;--band:#5C3220;--ok:#5CC184;--bad:#F27878;--warnB:#C98A2A;--warnT:#2B2415;--bar:#ECEDEE;--barInk:#16181B;--shadow:0 1px 2px rgba(0,0,0,.5)}}
+:root{color-scheme:light dark;--bg:#F5F4F0;--card:#FFFFFF;--ink:#16181B;--mute:#5B6068;--line:#E4E1DA;--soft:#F0EEE9;--field:#D5D1C8;--heat:#C2410C;--cool:#1E5AA8;--heatT:#FDEBDD;--coolT:#E6EEF8;--coolM:#A9C3E6;--band:#F7C9A8;--ok:#2F7D4A;--bad:#A61B1B;--warnB:#E8A33D;--warnT:#FFF8EC;--bar:#16181B;--barInk:#FFFFFF;--shadow:0 1px 2px rgba(0,0,0,.08)}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark;--bg:#121315;--card:#1B1D20;--ink:#ECEDEE;--mute:#9DA3AA;--line:#2C2F34;--soft:#24272B;--field:#3A3E44;--heat:#F0874A;--cool:#7DAEF0;--heatT:#3A2318;--coolT:#18263A;--coolM:#34557F;--band:#5C3220;--ok:#5CC184;--bad:#F27878;--warnB:#C98A2A;--warnT:#2B2415;--bar:#ECEDEE;--barInk:#16181B;--shadow:0 1px 2px rgba(0,0,0,.5)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121315;--card:#1B1D20;--ink:#ECEDEE;--mute:#9DA3AA;--line:#2C2F34;--soft:#24272B;--field:#3A3E44;--heat:#F0874A;--cool:#7DAEF0;--heatT:#3A2318;--coolT:#18263A;--coolM:#34557F;--band:#5C3220;--ok:#5CC184;--bad:#F27878;--warnB:#C98A2A;--warnT:#2B2415;--bar:#ECEDEE;--barInk:#16181B;--shadow:0 1px 2px rgba(0,0,0,.5)}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
 a{color:var(--cool)}
@@ -254,6 +257,10 @@ legend{font-size:14px;font-weight:600;margin-bottom:8px;padding:0}
    <span><span class="sw" style="border-radius:50%;background:#FF3700"></span>Heater on</span><span><span class="sw" style="border-radius:50%;background:#00C81E"></span>Heating allowed</span><span><span class="sw" style="border-radius:50%;background:#0046FF"></span>Outside schedule</span><span><span class="sw" style="border-radius:50%;background:#E6E0D8;outline:1px solid var(--field)"></span>Turned off</span>
    <span><span class="sw" style="border-radius:50%;background:#E8A000"></span>Waiting for clock</span><span><span class="sw" style="border-radius:50%;background:#9600FF"></span>No WiFi</span><span><span class="sw" style="border-radius:50%;background:#E00000"></span>Fault</span></div>
  </section>
+ <section class="card" aria-labelledby="h7">
+  <div><h2 id="h7">Appearance</h2><p class="desc">Colour theme for this page. It applies to everyone who opens it.</p></div>
+  <div class="g3"><label class="f">Theme<select class="in" name="theme"><option value="0">Match device</option><option value="1">Light</option><option value="2">Dark</option></select></label></div>
+ </section>
  <section class="card" aria-labelledby="h5">
   <h2 id="h5">Network &amp; security</h2>
   <div class="g2">
@@ -278,6 +285,8 @@ const dur=min=>{min=Math.round(min);if(min<60)return min+' min';const h=Math.flo
 const ago=s=>s<60?s+' s':s<3600?Math.round(s/60)+' min':s<86400?(s/3600).toFixed(1).replace('.0','')+' h':Math.floor(s/86400)+' d '+Math.floor(s%86400/3600)+' h';
 const f1=v=>v==null||isNaN(v)?'–':(+v).toFixed(1)+'°';
 let S=null,hist=[],tab='status';
+// Theme: 0 follows the OS setting, 1 light, 2 dark. Cached so the head script applies it before first paint.
+function theme(v){const t=['','light','dark'][v]||'',r=document.documentElement;if(t)r.dataset.theme=t;else delete r.dataset.theme;try{t?localStorage.setItem('st-theme',t):localStorage.removeItem('st-theme')}catch(e){}}
 function brand(t){if(!t)return;$('#brand').textContent=t;document.title=t}
 function toast(t){const m=$('#toast');m.textContent=t;m.classList.add('show');clearTimeout(m._t);m._t=setTimeout(()=>m.classList.remove('show'),3500)}
 async function j(u,o){const r=await fetch(u,o);const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||r.status+' '+r.statusText);return d}
@@ -340,7 +349,7 @@ const why={'below on temp':s=>'Below '+s.onTemp+'°, heating to '+s.offTemp+'°'
  'outside schedule':()=>'Outside schedule','disabled':()=>'Frost guard is turned off','time not synced':()=>'Waiting for the clock to sync','sensor failure':()=>'Sensor not responding, kept off',
  'boost':s=>'Boost, '+dur(s.boostLeftS/60)+' left','boost, reached off temp':s=>'Boost paused, reached '+s.offTemp+'°'};
 function conn(ok,txt){$('#cdot').style.background=ok==1?'var(--ok)':ok==2?'var(--warnB)':'var(--bad)';$('#ctext').textContent=txt}
-async function status(){let d;try{d=await j('/api/status')}catch(e){conn(0,'Offline');return}S=d;brand(d.title);
+async function status(){let d;try{d=await j('/api/status')}catch(e){conn(0,'Offline');return}S=d;brand(d.title);if(!dirtyN())theme(d.theme);
  const now=new Date(d.now*1000);
  conn(d.timeValid?1:2,d.timeValid?'Online · '+DAY[now.getDay()]+' '+now.getDate()+' '+MON[now.getMonth()]+', '+clk(now):'Online · waiting for time');
  $('#temp').textContent=d.temp==null?'–':d.temp.toFixed(1)+'°';$('#hum').textContent=d.hum==null?'':Math.round(d.hum)+'% RH';
@@ -404,7 +413,7 @@ async function openDay(n){sel=n;daysList();const f=files.find(x=>x.name==n);$('#
 async function del(n){if(!confirm('Delete the log for '+dayLabel(n,1)+'? This cannot be undone.'))return;try{await j('/api/log?f='+encodeURIComponent(n),{method:'DELETE'});toast('Deleted '+n);sel=null;loadLogs()}catch(e){toast(e.message)}}
 
 // ---------- settings ----------
-const F=$('#sf'),NUM=['ledLevel','onTemp','offTemp','tempOffset','tuyaDp','logIntervalS','retentionDays','heaterMode'];let base=null;
+const F=$('#sf'),NUM=['theme','ledLevel','onTemp','offTemp','tempOffset','tuyaDp','logIntervalS','retentionDays','heaterMode'];let base=null;
 function vals(){const o={};for(const el of F.elements){if(!el.name)continue;if(el.type=='radio'){if(el.checked)o[el.name]=+el.value;continue}
  o[el.name]=el.type=='checkbox'?el.checked:el.type=='time'?(el.value?(+el.value.slice(0,2))*60+(+el.value.slice(3,5)):0):NUM.includes(el.name)?+el.value:el.value}return o}
 function fill(d){for(const[k,v]of Object.entries(d)){const els=F.elements[k];if(!els)continue;
@@ -412,7 +421,7 @@ function fill(d){for(const[k,v]of Object.entries(d)){const els=F.elements[k];if(
  if(el.type=='checkbox')el.checked=!!v;else if(el.type=='time')el.value=hm(v);else if(k=='logIntervalS'){if(![...el.options].some(o=>+o.value==v))el.add(new Option(v+' seconds',v));el.value=v}else el.value=v}
  base=vals();ui()}
 function dirtyN(){if(!base)return 0;const v=vals();return Object.keys(v).filter(k=>v[k]!==base[k]).length}
-function ui(){const m=(vals().heaterMode)|0;$('#m1').classList.toggle('hide',m!=1);$('#m2').classList.toggle('hide',m!=2);$('#tst').classList.toggle('hide',m==0);
+function ui(){const m=(vals().heaterMode)|0;if(base)theme(vals().theme);$('#m1').classList.toggle('hide',m!=1);$('#m2').classList.toggle('hide',m!=2);$('#tst').classList.toggle('hide',m==0);
  $('#wpw').classList.toggle('warn',!F.elements.webPass.value);
  if(base){const hc=F.elements.hostname.value.toLowerCase()!=base.hostname;$('#hostnote').textContent=hc?'Saving restarts the device at the new address, with a new certificate (your browser will warn again).':'Letters, digits and hyphens.';$('#hostnote').style.color=hc?'var(--heat)':''}const n=dirtyN();$('#bar').classList.toggle('hide',!n);$('#dirty').textContent=n+(n==1?' unsaved change':' unsaved changes')}
 F.addEventListener('input',ui);F.addEventListener('change',ui);

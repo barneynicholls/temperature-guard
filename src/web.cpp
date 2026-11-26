@@ -184,6 +184,7 @@ static esp_err_t hStatus(httpd_req_t* req) {
     d["logIntervalS"] = settings.logIntervalS;
     d["hostname"] = settings.hostname;
     d["title"] = settings.title;
+    d["theme"] = settings.theme;
     d["webPassSet"] = !settings.webPass.isEmpty();
     d["sd"] = datalog::sdReady();
     d["sdTotalMB"] = (uint32_t)(datalog::totalBytes() / 1048576ULL);
@@ -240,6 +241,7 @@ static void settingsToJson(JsonDocument& d) {
   d["hookOn"] = settings.hookOn.isEmpty() ? "" : MASK;   // URLs carry the service token
   d["hookOff"] = settings.hookOff.isEmpty() ? "" : MASK;
   d["ledLevel"] = settings.ledLevel;
+  d["theme"] = settings.theme;
   d["title"] = settings.title;
   d["wifiSsid"] = settings.wifiSsid;
   d["wifiPass"] = settings.wifiPass.isEmpty() ? "" : MASK;
@@ -307,6 +309,7 @@ static esp_err_t hPostSettings(httpd_req_t* req) {
   else if (!intField(in["heaterMode"], n.heaterMode, HEATER_NONE, HEATER_WEBHOOK)) bad = "Bad heater mode";
   else if (!intField(in["tuyaDp"], n.tuyaDp, 1, 255)) bad = "Switch DP must be 1-255";
   else if (!intField(in["ledLevel"], n.ledLevel, 0, 3)) bad = "Bad status light level";
+  else if (!intField(in["theme"], n.theme, 0, 2)) bad = "Bad theme";
   if (bad) return sendErr(req, "400 Bad Request", bad);
   if (!in["tuyaId"].isNull()) n.tuyaId = in["tuyaId"].as<String>();
   setSecret(n.tuyaKey, in["tuyaKey"]);

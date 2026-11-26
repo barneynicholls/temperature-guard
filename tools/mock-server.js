@@ -21,7 +21,7 @@ const NOW = process.env.MOCK_NOW ? new Date(process.env.MOCK_NOW).getTime() : Da
 const settings = {
   enabled: true, onTemp: 11, offTemp: 15, tempOffset: -0.4, nightStart: 22 * 60, nightEnd: 7 * 60, weekendAllDay: true,
   logIntervalS: 60, retentionDays: 90, heaterMode: 1, tuyaId: 'bf0123456789abcdefxyz1', tuyaKey: '********', tuyaIp: '192.168.1.50',
-  tuyaVer: '3.4', tuyaDp: 1, hookOn: '', hookOff: '', ledLevel: 1, title: 'Studio', wifiSsid: 'HomeNetwork', wifiPass: '********',
+  tuyaVer: '3.4', tuyaDp: 1, hookOn: '', hookOff: '', ledLevel: 1, theme: 0, title: 'Studio', wifiSsid: 'HomeNetwork', wifiPass: '********',
   hostname: 'studio-temp', webPass: '********',
 };
 
@@ -84,7 +84,7 @@ function status() {
     wantOn: !!cur.h, lastCmd: 'OK: ' + (cur.h ? 'ON' : 'OFF'), lastCmdTime: Math.floor(NOW / 1000) - 140, boostLeftS: 0, testHoldS: 0,
     onTemp: settings.onTemp, offTemp: settings.offTemp, nightStart: settings.nightStart, nightEnd: settings.nightEnd,
     weekendAllDay: settings.weekendAllDay, retentionDays: settings.retentionDays, logIntervalS: settings.logIntervalS,
-    hostname: settings.hostname, title: settings.title, webPassSet: true, sd: true, sdTotalMB: 15193, sdUsedMB: 2,
+    hostname: settings.hostname, title: settings.title, theme: settings.theme, webPassSet: true, sd: true, sdTotalMB: 15193, sdUsedMB: 2,
     rssi: -58, ip: '192.168.1.42', uptimeS: Math.floor((NOW - start) / 1000), heap: 182344, fw: FW,
     events: events.slice(-50).reverse().map(e => stamp(e[0]) + '  ' + e[1]),
   };

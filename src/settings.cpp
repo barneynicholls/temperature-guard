@@ -49,6 +49,7 @@ static void loadFrom(const char* ns) {
   settings.hookOn        = prefs.getString("hOn", d.hookOn);
   settings.hookOff       = prefs.getString("hOff", d.hookOff);
   settings.ledLevel      = prefs.getUChar("led", d.ledLevel);
+  settings.theme         = prefs.getUChar("theme", d.theme);
   settings.title         = prefs.getString("title", d.title);
   settings.wifiSsid      = prefs.getString("ssid", d.wifiSsid);
   settings.wifiPass      = prefs.getString("wpass", d.wifiPass);
@@ -77,6 +78,7 @@ void settingsSave() {
   prefs.putString("hOn", settings.hookOn);
   prefs.putString("hOff", settings.hookOff);
   prefs.putUChar("led", settings.ledLevel);
+  prefs.putUChar("theme", settings.theme);
   prefs.putString("title", settings.title);
   prefs.putString("ssid", settings.wifiSsid);
   prefs.putString("wpass", settings.wifiPass);

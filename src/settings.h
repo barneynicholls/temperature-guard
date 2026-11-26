@@ -36,6 +36,9 @@ struct Settings {
   // Status light: 0 off, 1 low, 2 medium, 3 high
   uint8_t ledLevel       = 1;
 
+  // Web UI colour theme: 0 match the viewer's device, 1 light, 2 dark
+  uint8_t theme          = 0;
+
   // Heater backend
   uint8_t heaterMode     = HEATER_NONE;
   String  tuyaId;

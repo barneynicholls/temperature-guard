@@ -19,7 +19,10 @@ Everything is done from a web page served by the device over HTTPS, and it works
 * **Logs**: one entry per day with its temperature range and heater time; pick a day for its chart,
   low/high, heater cycles, humidity range and events, or download/delete its CSV.
 * **Settings**: name and web address, thresholds, schedule, heater plug (with **Test on / Test off**),
-  logging, status light, WiFi, web password, firmware update and restart.
+  logging, status light, appearance, WiFi, web password, firmware update and restart.
+
+The page follows the light or dark mode of whatever phone or computer is viewing it. To fix it to
+one or the other for everyone, use **Settings → Appearance**.
 
 | Logs | Settings |
 |---|---|
